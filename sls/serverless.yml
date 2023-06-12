@@ -59,7 +59,7 @@ resources:
         MaxCapacity: 10
         MinCapacity: 1
         ResourceId: !Sub "table/${LkDynamoDbTableDevi}"
-        RoleARN: ${{ secrets.LAMBDA_ROLE_ARN}}
+        RoleARN: arn:aws:iam::882743124337:role/lambda-role
         ScalableDimension: "dynamodb:table:ReadCapacityUnits"
         ServiceNamespace: "dynamodb"
 
@@ -80,7 +80,7 @@ resources:
         MaxCapacity: 10
         MinCapacity: 1
         ResourceId: !Sub "table/${LkDynamoDbTableDevi}"
-        RoleARN: ${{ secrets.LAMBDA_ROLE_ARN}}
+        RoleARN: arn:aws:iam::882743124337:role/lambda-role
         ScalableDimension: "dynamodb:table:WriteCapacityUnits"
         ServiceNamespace: "dynamodb"
 
