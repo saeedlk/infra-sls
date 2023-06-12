@@ -1,7 +1,10 @@
 name: see
 
 on: 
-  workflow_dispatch:
+  # workflow_dispatch:
+  push:
+    branches:
+      - main
     
 
 jobs:
@@ -15,8 +18,8 @@ jobs:
       - name: Configure AWS credentials from AWS account
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          # role-to-assume: arn:aws:iam::882743124337:role/infra-terra-role
-          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          role-to-assume: arn:aws:iam::882743124337:role/infra-terra-role
+          # role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ap-south-1
           role-session-name: GitHub-OIDC-TERRAFORM
     
@@ -27,7 +30,7 @@ jobs:
           terraform_version: 1.2.5
 
       - name: Terraform Init
-        working-directory: ./Terraform
+        working-directory: ./terraform
         id: init
         env:
           AWS_BUCKET_NAME: github-oidc-aws-tfstates-lk
