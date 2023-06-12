@@ -20,7 +20,7 @@ provider:
           # Resource: "arn:aws:dynamodb:ap-south-1:882743124337:table/${self:provider.environment.DYNAMODB_TABLE}"
           # Resource: "arn:aws:dynamodb:ap-south-1:183810758403:table/Service"
           Resource: 
-            - ${{$ARN}}          
+            - "arn:aws:dynamodb:ap-south-1:882743124337:table/Devices"    
 
 
 functions: 
