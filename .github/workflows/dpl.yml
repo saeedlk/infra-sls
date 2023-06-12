@@ -5,8 +5,49 @@ on:
     
 
 jobs:
+  build-machine:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          # role-to-assume: arn:aws:iam::882743124337:role/infra-terra-role
+          role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
+          aws-region: ap-south-1
+          role-session-name: GitHub-OIDC-TERRAFORM
+    
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.5
+
+      - name: Terraform Init
+        working-directory: ./Terraform
+        id: init
+        env:
+          AWS_BUCKET_NAME: github-oidc-aws-tfstates-lk
+          AWS_BUCKET_KEY_NAME: infra2.tfstate
+          AWS_REGION: ap-south-1
+        run: |
+          terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" -backend-config="region=${AWS_REGION}"
+          terraform validate -no-color
+
+      - name: Plan and Apply
+        working-directory: ./terraform
+        run: |
+          terraform plan -out=tfplan
+          terraform apply -auto-approve tfplan  
+
+
   deploy:
-    name: deploy
+    name: deploy serverless
+    needs: build-machine
+    # if: success()
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,7 +64,7 @@ jobs:
       with:
         args: deploy
       env:
-        SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+        # SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
         # or if using AWS credentials directly
-        # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
