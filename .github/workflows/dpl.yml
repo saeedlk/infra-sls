@@ -1,4 +1,4 @@
-name: seess
+name: sss
 
 on: 
   # workflow_dispatch:
@@ -70,7 +70,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build-machine
+    # needs: build-machine
 
     steps:
       - uses: actions/checkout@v3
