@@ -18,7 +18,7 @@ jobs:
       - name: Configure AWS credentials from AWS account
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::882743124337:role/infra-terra-role
+          role-to-assume: arn:aws:iam::882743124337:role/infra-sls-role
           # role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
           aws-region: ap-south-1
           role-session-name: GitHub-OIDC-TERRAFORM
