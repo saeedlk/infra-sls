@@ -53,8 +53,10 @@ jobs:
 
   deploy:
     name: deploy serverless
+
     needs: build-machine
     # if: success()
+    
     runs-on: ubuntu-latest
     
     strategy:
