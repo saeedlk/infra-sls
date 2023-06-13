@@ -80,7 +80,7 @@ jobs:
   serverless_job:
     name: Serverless Deployment
     runs-on: ubuntu-latest
-    # needs: terraform_job
+    needs: terraform_job
     environment: Serverless
 
     steps:
@@ -107,6 +107,8 @@ jobs:
             echo "Deploying Serverless application..."
             sls deploy --stage dev
             echo "URL=$endpoint" >> $GITHUB_ENV
+            echo "endpoint=$URL" >> $GITHUB_ENV
+            echo "$URL=endpoint" >> $GITHUB_ENV
           elif [[ "${{ github.event.head_commit.message }}" == "remove" ]]; then
             echo "Removing Serverless application..."
             sls remove --stage dev
@@ -118,5 +120,6 @@ jobs:
       - name: Use deployed URL
         run: |
           echo "Deployed URL: ${{ env.URL }}"
+          echo "Deployed URL: ${{ env.endpoint }}"
 
        
