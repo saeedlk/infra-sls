@@ -101,11 +101,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          if [[ "${{ github.event.head_commit.message }}" == *"[DEPLOY]"* ]]; then
+          if [[ "${{ github.event.head_commit.message }}" == "deploy" ]]; then
             echo "Deploying Serverless application..."
-            sls deploy
-          else
+            sls deploy --stage dev
+          elif [[ "${{ github.event.head_commit.message }}" == "remove" ]]; then
             echo "Removing Serverless application..."
-            sls remove
+            sls remove --stage dev
+          else
+            echo "Commit message does not require deployment or removal."
+            exit 0
           fi
           
