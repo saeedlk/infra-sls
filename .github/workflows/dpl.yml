@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     environment: Packer
 
+    if: ${{ github.event_name != 'push' }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -49,12 +51,15 @@ jobs:
         id: build-p
         run: packer build ./images/image.pkr.hcl
   
+
   
   terraform_job:
     name: Terraform Deployment
     needs: packer_job
     runs-on: ubuntu-latest
     environment: Terraform
+
+    if: ${{ github.event_name != 'push' }}
 
     steps:
       
@@ -118,6 +123,7 @@ jobs:
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 
+
   serverless_job:
     name: Serverless Deployment
     runs-on: ubuntu-latest
@@ -147,7 +153,6 @@ jobs:
           if [[ "${{ github.event.head_commit.message }}" == "deploy" ]]; then
             echo "Deploying Serverless application..."
             sls deploy
-            echo "$URL=endpoint" >> $GITHUB_ENV
           elif [[ "${{ github.event.head_commit.message }}" == "remove" ]]; then
             echo "Removing Serverless application..."
             sls remove
@@ -159,7 +164,6 @@ jobs:
       - name: Use deployed URL
         run: |
           echo "Deployed URL: ${{ env.URL }}"
-          echo "Deployed URL: ${{ env.endpoint }}"
 
 
        
