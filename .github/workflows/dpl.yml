@@ -52,7 +52,7 @@ jobs:
   
   terraform_job:
     name: Terraform Deployment
-    # needs: packer_job
+    needs: packer_job
     runs-on: ubuntu-latest
     environment: Terraform
 
