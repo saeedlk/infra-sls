@@ -100,7 +100,7 @@ jobs:
       - name: Install serverless globally
         run: npm install -g serverless
 
-      - name: serverless deploy/remove
+      - name: Deploy or Remove Serverless Application
         # uses: serverless/github-action@v3.2
         # with:
         #   args: deploy
@@ -109,5 +109,11 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          sls deploy
+          if [[ "${{ github.event.head_commit.message }}" == *"[DEPLOY]"* ]]; then
+            echo "Deploying Serverless application..."
+            sls deploy
+          else
+            echo "Removing Serverless application..."
+            sls remove
+          fi
           
