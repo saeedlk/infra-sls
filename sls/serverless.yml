@@ -25,12 +25,20 @@ provider:
 
 functions: 
   
-  GetConnectionList:
-    # name: GetConnectionList
-    handler: GetConnectionList/index.handler
+  # GetConnectionList:
+  #   # name: GetConnectionList
+  #   handler: GetConnectionList/index.handler
+  #   events:
+  #     - httpApi:
+  #         path: /service
+  #         method: GET
+
+  GetConnectionExpiredTime:
+    # name: GetConnectionExpiredTime
+    handler: GetConnectionExpiredTime/index.handler
     events:
       - httpApi:
-          path: /service
+          path: /service/expired/date
           method: GET
 
 resources:
@@ -49,48 +57,48 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        BillingMode: PROVISIONED
+        BillingMode: PAY_PER_REQUEST
 
 
 
-    LkDynamoDbTableDeviScalableTargetRead:
-      Type: "AWS::ApplicationAutoScaling::ScalableTarget"
-      Properties:
-        MaxCapacity: 10
-        MinCapacity: 1
-        ResourceId: !Sub "table/${LkDynamoDbTableDevi}"
-        RoleARN: arn:aws:iam::882743124337:role/lambda-role
-        ScalableDimension: "dynamodb:table:ReadCapacityUnits"
-        ServiceNamespace: "dynamodb"
+    # LkDynamoDbTableDeviScalableTargetRead:
+    #   Type: "AWS::ApplicationAutoScaling::ScalableTarget"
+    #   Properties:
+    #     MaxCapacity: 10
+    #     MinCapacity: 1
+    #     ResourceId: !Sub "table/${LkDynamoDbTableDevi}"
+    #     RoleARN: arn:aws:iam::882743124337:role/lambda-role
+    #     ScalableDimension: "dynamodb:table:ReadCapacityUnits"
+    #     ServiceNamespace: "dynamodb"
 
-    LkDynamoDbTableDeviScalingPolicyRead:
-      Type: "AWS::ApplicationAutoScaling::ScalingPolicy"
-      Properties:
-        PolicyName: "LkDynamoDbTableDeviScalingPolicyRead"
-        PolicyType: "TargetTrackingScaling"
-        ScalingTargetId: !Ref LkDynamoDbTableDeviScalableTargetRead
-        TargetTrackingScalingPolicyConfiguration:
-          PredefinedMetricSpecification:
-            PredefinedMetricType: "DynamoDBReadCapacityUtilization"
-          TargetValue: 70
+    # LkDynamoDbTableDeviScalingPolicyRead:
+    #   Type: "AWS::ApplicationAutoScaling::ScalingPolicy"
+    #   Properties:
+    #     PolicyName: "LkDynamoDbTableDeviScalingPolicyRead"
+    #     PolicyType: "TargetTrackingScaling"
+    #     ScalingTargetId: !Ref LkDynamoDbTableDeviScalableTargetRead
+    #     TargetTrackingScalingPolicyConfiguration:
+    #       PredefinedMetricSpecification:
+    #         PredefinedMetricType: "DynamoDBReadCapacityUtilization"
+    #       TargetValue: 70
 
-    LkDynamoDbTableDeviScalableTargetWrite:
-      Type: "AWS::ApplicationAutoScaling::ScalableTarget"
-      Properties:
-        MaxCapacity: 10
-        MinCapacity: 1
-        ResourceId: !Sub "table/${LkDynamoDbTableDevi}"
-        RoleARN: arn:aws:iam::882743124337:role/lambda-role
-        ScalableDimension: "dynamodb:table:WriteCapacityUnits"
-        ServiceNamespace: "dynamodb"
+    # LkDynamoDbTableDeviScalableTargetWrite:
+    #   Type: "AWS::ApplicationAutoScaling::ScalableTarget"
+    #   Properties:
+    #     MaxCapacity: 10
+    #     MinCapacity: 1
+    #     ResourceId: !Sub "table/${LkDynamoDbTableDevi}"
+    #     RoleARN: arn:aws:iam::882743124337:role/lambda-role
+    #     ScalableDimension: "dynamodb:table:WriteCapacityUnits"
+    #     ServiceNamespace: "dynamodb"
 
-    LkDynamoDbTableDeviScalingPolicyWrite:
-      Type: "AWS::ApplicationAutoScaling::ScalingPolicy"
-      Properties:
-        PolicyName: "LkDynamoDbTableDeviScalingPolicyWrite"
-        PolicyType: "TargetTrackingScaling"
-        ScalingTargetId: !Ref LkDynamoDbTableDeviScalableTargetWrite
-        TargetTrackingScalingPolicyConfiguration:
-          PredefinedMetricSpecification:
-            PredefinedMetricType: "DynamoDBWriteCapacityUtilization"
-          TargetValue: 70
+    # LkDynamoDbTableDeviScalingPolicyWrite:
+    #   Type: "AWS::ApplicationAutoScaling::ScalingPolicy"
+    #   Properties:
+    #     PolicyName: "LkDynamoDbTableDeviScalingPolicyWrite"
+    #     PolicyType: "TargetTrackingScaling"
+    #     ScalingTargetId: !Ref LkDynamoDbTableDeviScalableTargetWrite
+    #     TargetTrackingScalingPolicyConfiguration:
+    #       PredefinedMetricSpecification:
+    #         PredefinedMetricType: "DynamoDBWriteCapacityUtilization"
+    #       TargetValue: 70
