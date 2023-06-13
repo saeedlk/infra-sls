@@ -117,9 +117,10 @@ jobs:
             exit 0
           fi
           
-      - name: Use deployed URL
+      - name: Use deployed URL1
         run: |
           echo "Deployed URL: ${{ env.URL }}"
           echo "Deployed URL: ${{ env.endpoint }}"
+
 
        
