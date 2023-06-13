@@ -31,9 +31,9 @@ build {
 //     source      = "./tf_ssh.pub"
 //     destination = "/tmp/tf_ssh.pub"
 //   }
-//   provisioner "shell" {
-//     script = "./scripts/setup.sh"
-//   }
+    provisioner "shell" {
+        script = "./scripts/setup.sh"
+    }
 }
 
 // output "ami_id" {
