@@ -12,6 +12,44 @@ permissions:
       pull-requests: write # This is required for gh bot to comment PR
 
 jobs:
+  packer_job:
+    name: Provision Base Image
+    runs-on: ubuntu-latest
+    environment: Packer
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::882743124337:role/infra-sls-role
+          # role-to-assume: {{ secrets.ROLE_TO_ASSUME }}
+          aws-region: ap-south-1
+          role-session-name: GitHub-OIDC-TERRAFORM
+
+      - name: Setup `packer` (using local GitHub Action)
+        uses: "hashicorp/setup-packer@main"
+        id: setup
+
+      - name: Print `packer` version
+        run: packer version
+
+      - name: Packer Init
+        id: init-p
+        working-directory: ./images
+        run: packer init .
+
+      - name: Packer Validate
+        id: validate-p
+        run: packer validate ./images/image.pkr.hcl
+
+      - name: Packer Build
+        id: build-p
+        run: packer build ./images/image.pkr.hcl
+  
+  
   terraform_job:
     name: Terraform Deployment
     # needs: packer_job
@@ -21,7 +59,10 @@ jobs:
     steps:
       
       - name: Print Environment Name
-        run: echo ${{ github.environment}}
+        run: |
+          echo ${{ github.environment}}
+          echo "${{ github.environment}}"
+          echo "Environment Name: ${{ env.GITHUB_ENV }}"
       
       - name: Checkout Repository
         uses: actions/checkout@v3
