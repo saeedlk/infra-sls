@@ -12,10 +12,17 @@ permissions:
       pull-requests: write # This is required for gh bot to comment PR
 
 jobs:
-  build-machine:
+  terraform_job:
+    name: Terraform Deployment
+    # needs: packer_job
     runs-on: ubuntu-latest
+    environment: Terraform
 
     steps:
+      
+      - name: Print Environment Name
+        run: echo ${{ github.environment}}
+      
       - name: Checkout Repository
         uses: actions/checkout@v3
       
@@ -68,9 +75,11 @@ jobs:
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 
-  deploy:
+  serverless_job:
+    name: Serverless Deployment
     runs-on: ubuntu-latest
-    # needs: build-machine
+    # needs: terraform_job
+    environment: Serverless
 
     steps:
       - uses: actions/checkout@v3
@@ -100,4 +109,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         run: |
-          sls remove
+          sls deploy
