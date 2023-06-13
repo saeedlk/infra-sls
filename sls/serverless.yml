@@ -60,7 +60,7 @@ resources:
         BillingMode: PAY_PER_REQUEST
 
 
-
+    #
     # LkDynamoDbTableDeviScalableTargetRead:
     #   Type: "AWS::ApplicationAutoScaling::ScalableTarget"
     #   Properties:
