@@ -146,13 +146,11 @@ jobs:
         run: |
           if [[ "${{ github.event.head_commit.message }}" == "deploy" ]]; then
             echo "Deploying Serverless application..."
-            sls deploy --stage dev
-            echo "URL=$endpoint" >> $GITHUB_ENV
-            echo "endpoint=$URL" >> $GITHUB_ENV
+            sls deploy
             echo "$URL=endpoint" >> $GITHUB_ENV
           elif [[ "${{ github.event.head_commit.message }}" == "remove" ]]; then
             echo "Removing Serverless application..."
-            sls remove --stage dev
+            sls remove
           else
             echo "Commit message does not require deployment or removal."
             exit 0
